@@ -6,7 +6,11 @@
 locals {
   red_monitors = {
     "error-rate" = {
-      promql_expr  = "100 * (sum(rate(http_requests_total{service=\"${var.service_name}\", status=~\"5..\"}[5m])) / sum(rate(http_requests_total{service=\"${var.service_name}\"}[5m])))"
+      # "or vector(0)" on the numerator matters: sum(rate(...)) over zero
+      # matching series is empty (no data), not 0, in PromQL. Without this
+      # fallback, the alert would read "No Data" every time the service has
+      # zero errors — i.e. exactly when it's healthy — instead of "Normal".
+      promql_expr  = "100 * ((sum(rate(http_requests_total{service=\"${var.service_name}\", status=~\"5..\"}[5m])) or vector(0)) / sum(rate(http_requests_total{service=\"${var.service_name}\"}[5m])))"
       threshold    = var.error_rate_threshold_pct
       comparison   = "gt"
       severity     = "critical"
