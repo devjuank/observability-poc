@@ -14,5 +14,10 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# Python
+__pycache__/
+*.pyc
+.venv/
+
 # OS / editor
 .DS_Store
