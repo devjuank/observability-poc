@@ -1,0 +1,50 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    paths:
+      - "observability-module/**"
+      - ".github/workflows/terraform-ci.yml"
+
+defaults:
+  run:
+    working-directory: observability-module
+
+jobs:
+  fmt:
+    name: terraform fmt -check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - run: terraform fmt -check -recursive -diff
+
+  validate:
+    name: terraform validate (${{ matrix.dir }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dir:
+          - modules/grafana-monitor
+          - modules/service-observability
+          - examples/payments-staging
+          - examples/payments-production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: terraform init
+        working-directory: observability-module/${{ matrix.dir }}
+        run: terraform init -backend=false -input=false
+
+      - name: terraform validate
+        working-directory: observability-module/${{ matrix.dir }}
+        run: terraform validate
