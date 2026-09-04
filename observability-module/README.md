@@ -11,16 +11,16 @@ example used to exercise it across two environments.
 ## Architecture
 
 ```
-                 ┌───────────────────────────┐
+                 ┌─────────────────────────────┐
                  │  Payment Authorization      │
                  │  Service (ECS task)         │
-                 └─────────────┬───────────────┘
+                 └──────────────┬──────────────┘
                                 │ metrics / logs / traces
                                 ▼
-                 ┌───────────────────────────┐
+                 ┌─────────────────────────────┐
                  │  OpenTelemetry Collector    │
                  │  (Grafana Alloy)            │
-                 └──────┬───────┬───────┬──────┘
+                 └───────┬───────┬───────┬─────┘
                          │       │       │
                  metrics │  logs │       │ traces
                          ▼       ▼       ▼
@@ -30,17 +30,17 @@ example used to exercise it across two environments.
                        └──────────┼─────────┘
                                   ▼
                             ┌───────────┐
-                            │  Grafana   │  dashboards + Alerting
+                            │  Grafana  │  dashboards + Alerting
                             └─────┬─────┘
                                   │ managed by
                                   ▼
-                  ┌────────────────────────────────┐
-                  │  This Terraform module           │
-                  │  (grafana-monitor +               │
-                  │   service-observability)          │
+                  ┌────────────────────────────────────┐
+                  │  This Terraform module             │
+                  │  (grafana-monitor +                │
+                  │   service-observability)           │
                   │  → creates dashboard + alert rules │
                   │    on top of the stack above       │
-                  └────────────────────────────────┘
+                  └────────────────────────────────────┘
 ```
 
 Prometheus, Loki, Tempo, and Grafana itself are treated as pre-existing
