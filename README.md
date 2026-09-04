@@ -60,7 +60,7 @@ UI → Administration → Service accounts → Add service account.)
 ### 3. Create the target folder
 
 `folder_uid` is an input to the module, not something it creates (see
-`observability-module/README.md`'s design decisions) — in a real org this
+`observability-module/DESIGN.md`'s design decisions) — in a real org this
 folder is already there, managed by the platform team. Here, create it once:
 
 ```bash
