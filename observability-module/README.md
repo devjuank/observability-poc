@@ -143,26 +143,14 @@ add their dashboard and alerts on top of it, which is exactly the boundary
 this module is built around (`folder_uid` and `datasource_uid` are inputs,
 not resources this module creates).
 
-To point this module at a real Grafana instance:
-
-1. Stand up the stack (see `observability-local-stack/` for a local
-   docker-compose based one — Phase 2 of this project, next step below).
-2. Create a Grafana service account token with permission to manage folders,
-   alert rules, and dashboards.
-3. Configure the `grafana` provider with that token, e.g.:
-   ```bash
-   export TF_VAR_grafana_url="http://localhost:3000"
-   export TF_VAR_grafana_auth="<service-account-token>"
-   ```
-4. `terraform apply` an example (e.g. `examples/payments-production`)
-   against it.
-
-`observability-local-stack/` (docker-compose + a small instrumented
-FastAPI service + a traffic/error-injection script) is the planned next
-step for this project, so the alerts and dashboard created here can be
-exercised end-to-end against real data. It is not part of this submission;
-this README will be updated with concrete run instructions if and when
-that lands.
+This repo includes exactly that stack, running locally via `docker-compose.yml`
+at the repo root (`infra/` for the platform pieces, `payments-api/` for an
+instrumented demo service) — see the root
+**[README's "Running the local demo"](../README.md#running-the-local-demo)**
+section for the full walkthrough: bring the stack up, create a service
+account token, `terraform apply` this module against it, then force an error
+burst and watch `payments-api-error-rate` actually transition to **Firing**
+in Grafana Alerting. That flow has been run end to end against this module.
 
 ## Future extension: Loki & Tempo
 
